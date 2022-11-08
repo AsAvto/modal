@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Раннее бронирование</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Titillium+Web:400,700,900" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+ <link rel="stylesheet" href="style.css">
+ <script src="modal.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+
+        <div class="popup-overlay"><!-- //оверлей - отображение формы на затемненном фоне -->
+ 
+          <div class="popWindow subscribe_window"><!-- //основное окно формы Раннего бронирования -->
+            <div class="start_page">
+              <div class="start_page body">
+                <h1 class="h1">Скидка при раннем бронировании</h1><br>
+                <h2 class="klow">
+                  <p>Раннее бронирование до 15 ноября 2022</p>
+                <p>на новогодние и зимние туры.</p>
+                <p>Успей поймать выгодное предложение.</p>
+                </h2>
+                
+                <a href="https://fanatbaikala.ru/tours/zima"><div class="btn">Узнать подробнее</div></a>
+                <div class="footer">
+                  <img src="logo.png" alt="logo">
+                  <p class="phone">+7 (3952) 48-05-39 </p>
+                </div>
+              </div>
+              </div>
+          
+        </div>
+        
+
+ 
+        </div><!-- /popup-overlay -->
+ 
+      </div>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.denis-creative.com/jquery.cookie.min/jquery.cookie.min.js"></script><!-- этот скрипт скачайте и добаьте локально, если нужны куки -->
+  <script>
+    // PopUp Form and thank you popup after sending message
+    var $popOverlay = $(".popup-overlay");
+    var $popWindow = $(".popWindow");
+    var $subscribeWindow = $(".subscribe_window");
+    var $popThankYouWindow = $(".thank_you_window");
+    var $popClose = $(".close-btn");
+ 
+    $(function() {
+      // Close Pop-Up after clicking on the button "Close"
+      $popClose.on("click", function() {
+        $popOverlay.fadeOut();
+        $popWindow.fadeOut();
+      });
+ 
+      // Close Pop-Up after clicking on the Overlay
+      $(document).on("click", function(event) {
+        if ($(event.target).closest($popWindow).length) return;
+        $popOverlay.fadeOut();
+        $popWindow.fadeOut();
+        event.stopPropagation();
+      });
+ 
+      // Form Subscribe
+      $(".subscribe-form").submit(function() {
+        var th = $(this);
+        $.ajax({
+          type: "POST",
+          url: "mail.php",
+          data: th.serialize()
+        }).done(function() {
+          // после успешной отправки скрываем форму подписки и выводим окно с благодарностью за заполнение формы
+          $subscribeWindow.fadeOut();
+          $popThankYouWindow.fadeIn();
+          // используем куки на 30 дней, если человек заполнил форму
+          // для куки обязательно должен быть подключен jquery.cookie.min.js
+          $.cookie('hideTheModal', 'true', { expires: 30 });
+          // очищаем форму
+          setTimeout(function() {
+            th.trigger("reset");
+          }, 1000);
+        });
+        return false;
+      });
+    });
+ 
+    // используйте этот код, если нужно появление формы с куки и вы подключали jquery.cookie.min.js
+    $(window).load(function() {
+      // задаем переменную для cookie
+      var hideTheModal = $.cookie('hideTheModal');
+      // если cookie не установлено...
+      if(hideTheModal == null){
+        // Через 2 секунды появляется контактная форма
+        setTimeout(function() {
+          $popOverlay.fadeIn();
+          $subscribeWindow.fadeIn();
+        }, 2000);
+      }
+    });
+  </script>
+</body>
+</html>
